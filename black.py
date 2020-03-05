@@ -1265,6 +1265,21 @@ class Line:
         ]
 
     @property
+    def contains_trailing_comman_list(self):
+        commas = 0
+        leaves = self.leaves
+        if leaves[-1].type == token.COMMA:
+            leaves = self.leaves[:-1]
+        for leave in reversed(leaves):
+            if leave.type in CLOSING_BRACKETS:
+                continue
+            if leave.type == token.COMMA:
+                return True
+            else:
+                return False
+        return False
+
+    @property
     def is_collection_with_optional_trailing_comma(self) -> bool:
         """Is this line a collection literal with a trailing comma that's optional?
 
@@ -1280,6 +1295,14 @@ class Line:
         else:
             closer = self.leaves[-1]
             close_index = -1
+
+        if closer.type == token.COMMA:
+            if self.leaves[0].type in OPENING_BRACKETS:
+                return False
+            for leave in self.leaves[:-1]:
+                if leave.type == token.COMMA:
+                    return True
+
         if closer.type not in CLOSING_BRACKETS or self.inside_brackets:
             return False
 
@@ -3945,6 +3968,7 @@ def is_line_short_enough(line: Line, *, line_length: int, line_str: str = "") ->
         len(line_str) <= line_length
         and "\n" not in line_str  # multiline strings
         and not line.contains_standalone_comments()
+        and not line.contains_trailing_comman_list
     )
 
 
