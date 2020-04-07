@@ -1299,7 +1299,9 @@ class Line:
         if closer.type == token.COMMA:
             if self.leaves[0].type in OPENING_BRACKETS:
                 return False
-            for leave in self.leaves[:-1]:
+            if self.leaves[-2].type in CLOSING_BRACKETS:
+                return False
+            for leave in reversed(self.leaves[:-1]):
                 if leave.type == token.COMMA:
                     return True
 

@@ -1,3 +1,8 @@
+instances = [
+    FooBar.objects.create(thing=goo, other=boo),
+    FooBar.objects.create(thing=xxx, other=yyy)
+]
+
 def foo():
     return render(request, template_name="i", context=context,)
 
@@ -22,6 +27,12 @@ def spaces_types(
 ):
     ...
 # output
+instances = [
+    FooBar.objects.create(thing=goo, other=boo),
+    FooBar.objects.create(thing=xxx, other=yyy),
+]
+
+
 def foo():
     return render(
         request,
